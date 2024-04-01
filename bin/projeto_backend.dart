@@ -4,14 +4,19 @@ import 'package:shelf/shelf.dart';
 import 'apis/blog_api.dart';
 import 'apis/login_api.dart';
 import 'infra/custom_server.dart';
-import 'utils/custom_env.dart';
+import 'services/noticia_service.dart';
+// import 'utils/custom_env.dart';
 
 void main() async {
   // CustomEnv.fromFile('.env.dev');
   final dotEnv = DotEnv(filePath: '.env');
 
   var cascadeHandler =
-      Cascade().add(LoginApi().handler).add(BlogApi().handler).handler;
+      //injeta a class concreta
+      Cascade()
+          .add(LoginApi().handler)
+          .add(BlogApi(NoticiaService()).handler)
+          .handler;
   var handler =
       Pipeline().addMiddleware(logRequests()).addHandler(cascadeHandler);
 
