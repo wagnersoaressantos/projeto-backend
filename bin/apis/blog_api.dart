@@ -18,8 +18,9 @@ class BlogApi {
     router.get('/blog/noticias', (Request req) {
       List<NoticiaModel> noticias = _service.findAll();
       List<Map> noticiaMap = noticias.map((e) => e.toJson()).toList();
-      return Response.ok(jsonEncode(noticiaMap),
-          headers: {'content-type': 'aplication/json'});
+      return Response.ok(
+        jsonEncode(noticiaMap),
+      );
     });
 
     router.post('/blog/noticias', (Request req) async {
