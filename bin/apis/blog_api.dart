@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
+import '../models/noticia_model.dart';
 import '../services/generic_service.dart';
 
 class BlogApi {
   // trabalha com interface e injeta uma class concreta que vai implementar a interface
-  final GenericService _service;
+  final GenericService<NoticiaModel> _service;
 
   BlogApi(this._service);
 
@@ -13,13 +16,16 @@ class BlogApi {
     Router router = Router();
 
     router.get('/blog/noticias', (Request req) {
-      // _service.findAll();
-      return Response.ok('Choveu hoje');
+      List<NoticiaModel> noticias = _service.findAll();
+      List<Map> noticiaMap = noticias.map((e) => e.toJson()).toList();
+      return Response.ok(jsonEncode(noticiaMap),
+          headers: {'content-type': 'aplication/json'});
     });
 
-    router.post('/blog/noticias', (Request req) {
-      // _service.save("");
-      return Response.ok('Choveu hoje');
+    router.post('/blog/noticias', (Request req) async {
+      var body = await req.readAsString();
+      _service.save(NoticiaModel.fromJSON(jsonDecode(body)));
+      return Response(201);
     });
 
     router.put('/blog/noticias', (Request req) {
