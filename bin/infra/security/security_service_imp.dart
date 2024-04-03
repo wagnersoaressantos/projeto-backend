@@ -17,8 +17,20 @@ class SecurityServiceImp implements SecurityService<JWT> {
   }
 
   @override
-  JWT? validateJWT(String token) {
-    // TODO: implement validateJWT
-    throw UnimplementedError();
+  Future<JWT?> validateJWT(String token) async {
+    String key = await CustomEnv.get(key: 'jwt_key');
+    try {
+      return JWT.verify(token, SecretKey(key));
+    } on JWTInvalidException {
+      return null;
+    } on JWTExpiredException {
+      return null;
+    } on JWTNotActiveException {
+      return null;
+    } on JWTUndefinedException {
+      return null;
+    } catch (e) {
+      return null;
+    }
   }
 }
