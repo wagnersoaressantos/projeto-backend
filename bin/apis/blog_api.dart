@@ -32,14 +32,14 @@ class BlogApi extends Api {
     });
 
     router.put('/blog/noticias', (Request req) {
-      String? id = req.url.queryParameters['id'];
+      // String? id = req.url.queryParameters['id'];
 
       // _service.save("");
       return Response.ok('Choveu hoje');
     });
 
     router.delete('/blog/noticias', (Request req) {
-      String? id = req.url.queryParameters['id'];
+      // String? id = req.url.queryParameters['id'];
 
       // _service.delete();
       return Response.ok('Choveu hoje');
