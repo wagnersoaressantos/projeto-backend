@@ -6,22 +6,27 @@ import '../infra/dependency_injector/dependency_injector.dart';
 import '../infra/security/security_service.dart';
 
 abstract class Api {
-  Handler getHandler({List<Middleware>? middleware});
+  Handler getHandler({List<Middleware>? middleware, bool isSecurity = false});
 
   Handler createHandler({
     required Handler router,
     List<Middleware>? middleware,
+    bool isSecurity = false,
   }) {
-    final _di = DependencyInjector();
-
-    var _securityService = _di.get<SecurityService>();
     middleware ??= [];
+
+    if (isSecurity) {
+      var _securityService = DependencyInjector().get<SecurityService>();
+      middleware.addAll([
+        _securityService.authorization,
+        _securityService.verifyJWT,
+      ]);
+    }
 
     var pipe = Pipeline();
     for (var m in middleware) {
       pipe = pipe.addMiddleware(m);
     }
-
     return pipe.addHandler(router);
   }
 }

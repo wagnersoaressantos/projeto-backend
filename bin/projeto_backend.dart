@@ -25,13 +25,8 @@ void main() async {
   var cascadeHandler =
       //injeta a class concreta
       Cascade()
-          .add(
-            LoginApi(_securityService).getHandler(),
-          )
-          .add(BlogApi(NoticiaService()).getHandler(middleware: [
-            _securityService.authorization,
-            _securityService.verifyJWT,
-          ]))
+          .add(LoginApi(_securityService).getHandler())
+          .add(BlogApi(NoticiaService()).getHandler(isSecurity: true))
           .handler;
   var handler = Pipeline()
       .addMiddleware(logRequests())
