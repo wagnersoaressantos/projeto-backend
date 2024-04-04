@@ -5,14 +5,16 @@ import 'package:shelf_router/shelf_router.dart';
 
 import '../models/noticia_model.dart';
 import '../services/generic_service.dart';
+import 'api.dart';
 
-class BlogApi {
+class BlogApi extends Api {
   // trabalha com interface e injeta uma class concreta que vai implementar a interface
   final GenericService<NoticiaModel> _service;
 
   BlogApi(this._service);
 
-  Handler get handler {
+  @override
+  Handler getHandler({List<Middleware>? middleware}) {
     Router router = Router();
 
     router.get('/blog/noticias', (Request req) {
@@ -43,6 +45,6 @@ class BlogApi {
       return Response.ok('Choveu hoje');
     });
 
-    return router.call;
+    return createHandler(router: router.call, middleware: middleware);
   }
 }

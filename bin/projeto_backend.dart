@@ -5,7 +5,6 @@ import 'apis/blog_api.dart';
 import 'apis/login_api.dart';
 import 'infra/custom_server.dart';
 import 'infra/middleware_interception.dart';
-import 'infra/security/security_service.dart';
 import 'infra/security/security_service_imp.dart';
 import 'services/noticia_service.dart';
 // import 'utils/custom_env.dart';
@@ -17,14 +16,17 @@ void main() async {
   var cascadeHandler =
       //injeta a class concreta
       Cascade()
-          .add(LoginApi(SecurityServiceImp()).handler)
-          .add(BlogApi(NoticiaService()).handler)
+          .add(
+            LoginApi(SecurityServiceImp()).getHandler(),
+          )
+          .add(BlogApi(NoticiaService()).getHandler(middleware: [
+            SecurityServiceImp().authorization,
+            SecurityServiceImp().verifyJWT,
+          ]))
           .handler;
   var handler = Pipeline()
       .addMiddleware(logRequests())
       .addMiddleware(MiddlewareInterception().middleware)
-      .addMiddleware(SecurityServiceImp().authorization)
-      .addMiddleware(SecurityServiceImp().verifyJWT)
       .addHandler(cascadeHandler);
 
   await CustomServer().initialize(
