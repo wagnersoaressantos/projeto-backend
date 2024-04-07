@@ -12,10 +12,10 @@ class Injects {
     var di = DependencyInjector();
     di.register<SecurityService>(() => SecurityServiceImp());
 
-    di.register<LoginApi>(() => LoginApi(di()));
+    di.register<LoginApi>(() => LoginApi(di.get()));
 
     di.register<GenericService<NoticiaModel>>(() => NoticiaService());
-    di.register<BlogApi>(() => BlogApi(di()));
+    di.register<BlogApi>(() => BlogApi(di.get()));
 
     return di;
   }

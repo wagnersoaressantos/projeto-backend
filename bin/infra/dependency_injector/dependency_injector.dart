@@ -38,6 +38,7 @@ class _InstanceGenerator<T> {
       _instance = _instanceCreator();
       _isFirsthGet = false;
     }
-    return _instance ?? _instanceCreator();
+    // ignore: prefer_if_null_operators
+    return _instance != null ? _instance : _instanceCreator();
   }
 }
